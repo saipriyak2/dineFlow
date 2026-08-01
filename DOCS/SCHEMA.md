@@ -1,110 +1,130 @@
-# Data Model / Schema — DineFlow
+# Data Model / Schema — Restaurant Web Application (MVP)
 
-This diagram reflects the entities and relationships defined in the Business Requirements Document 
+This diagram reflects the entities and relationships defined in the Business Requirements Document (Section 8 — Data Model Overview). It renders automatically on GitHub.
 
 ```mermaid
-erDiagram
-    USER ||--o{ RESERVATION : makes
-    USER ||--o{ ORDER : places
-    USER ||--o{ REVIEW : writes
-    USER ||--o| CART : owns
-
-    MENU_CATEGORY ||--o{ MENU_ITEM : contains
-
-    CART ||--o{ CART_ITEM : contains
-    CART_ITEM }o--|| MENU_ITEM : references
-
-    ORDER ||--o{ ORDER_ITEM : contains
-    ORDER_ITEM }o--|| MENU_ITEM : references
-    ORDER ||--|| PAYMENT : "paid via"
-    ORDER ||--o| REVIEW : "reviewed by"
-
-    USER {
-        uuid id PK
-        string name
-        string email UK
-        string passwordHash
-        string role "CUSTOMER | ADMIN"
-        datetime createdAt
+classDiagram
+    class User {
+        +UUID id
+        +String name
+        +String email
+        +String passwordHash
+        +String role
+        +DateTime createdAt
     }
 
-    MENU_CATEGORY {
-        uuid id PK
-        string name
-        string description
+    class MenuCategory {
+        +UUID id
+        +String name
+        +String description
     }
 
-    MENU_ITEM {
-        uuid id PK
-        uuid categoryId FK
-        string name
-        string description
-        decimal price
-        string imageUrl
-        boolean available
+    class MenuItem {
+        +UUID id
+        +UUID categoryId
+        +String name
+        +String description
+        +Decimal price
+        +String imageUrl
+        +Boolean available
     }
 
-    RESERVATION {
-        uuid id PK
-        uuid userId FK
-        string reservationNumber UK
-        date reservationDate
-        time timeSlot
-        int partySize
-        string status "CONFIRMED | CANCELLED | COMPLETED"
-        datetime createdAt
+    class Reservation {
+        +UUID id
+        +UUID userId
+        +String reservationNumber
+        +Date reservationDate
+        +Time timeSlot
+        +Int partySize
+        +String status
+        +DateTime createdAt
     }
 
-    CART {
-        uuid id PK
-        uuid userId FK
-        datetime updatedAt
+    class Cart {
+        +UUID id
+        +UUID userId
+        +DateTime updatedAt
     }
 
-    CART_ITEM {
-        uuid id PK
-        uuid cartId FK
-        uuid menuItemId FK
-        int quantity
+    class CartItem {
+        +UUID id
+        +UUID cartId
+        +UUID menuItemId
+        +Int quantity
     }
 
-    ORDER {
-        uuid id PK
-        uuid userId FK
-        string status "PLACED | PREPARING | READY | COMPLETED | CANCELLED | PAID"
-        string fulfillmentMethod "DELIVERY | PICKUP"
-        decimal totalAmount
-        datetime createdAt
+    class Order {
+        +UUID id
+        +UUID userId
+        +String status
+        +String fulfillmentMethod
+        +Decimal totalAmount
+        +DateTime createdAt
     }
 
-    ORDER_ITEM {
-        uuid id PK
-        uuid orderId FK
-        uuid menuItemId FK
-        int quantity
-        decimal priceAtPurchase
+    class OrderItem {
+        +UUID id
+        +UUID orderId
+        +UUID menuItemId
+        +Int quantity
+        +Decimal priceAtPurchase
     }
 
-    PAYMENT {
-        uuid id PK
-        uuid orderId FK
-        string method "CARD | UPI | WALLET"
-        string status "PENDING | SUCCESS | FAILED | REFUNDED"
-        decimal amount
-        datetime createdAt
+    class Payment {
+        +UUID id
+        +UUID orderId
+        +String method
+        +String status
+        +Decimal amount
+        +DateTime createdAt
     }
 
-    REVIEW {
-        uuid id PK
-        uuid orderId FK
-        uuid userId FK
-        int rating "1-5"
-        string text
-        datetime createdAt
+    class Review {
+        +UUID id
+        +UUID orderId
+        +UUID userId
+        +Int rating
+        +String text
+        +DateTime createdAt
     }
+
+    User "1" --> "0..*" Reservation : makes
+    User "1" --> "0..*" Order : places
+    User "1" --> "0..*" Review : writes
+    User "1" --> "0..1" Cart : owns
+
+    MenuCategory "1" --> "0..*" MenuItem : offers
+
+    Cart "1" --> "0..*" CartItem : contains
+    CartItem "0..*" --> "1" MenuItem : references
+
+    Order "1" --> "0..*" OrderItem : contains
+    OrderItem "0..*" --> "1" MenuItem : references
+    Order "1" --> "1" Payment : paid via
+    Order "1" --> "0..1" Review : reviewed by
+
+    classDef userColor fill:#FFE066,stroke:#D4A017,stroke-width:1px,color:#3d2e00
+    classDef menuColor fill:#A9C9FF,stroke:#4C7CD4,stroke-width:1px,color:#0b2447
+    classDef orderColor fill:#FFB3D9,stroke:#D4508A,stroke-width:1px,color:#4b0f2c
+    classDef reservationColor fill:#FFCC99,stroke:#D4780F,stroke-width:1px,color:#4a2600
+    classDef paymentColor fill:#C9B3FF,stroke:#7B4FD4,stroke-width:1px,color:#2c1a4a
+    classDef reviewColor fill:#B3E6A8,stroke:#5FA83A,stroke-width:1px,color:#1a3d0f
+
+    class User:::userColor
+    class MenuCategory:::menuColor
+    class MenuItem:::menuColor
+    class Reservation:::reservationColor
+    class Cart:::orderColor
+    class CartItem:::orderColor
+    class Order:::orderColor
+    class OrderItem:::orderColor
+    class Payment:::paymentColor
+    class Review:::reviewColor
 ```
 
-## Key Relationships 
+**Color key:** 🟡 Identity (`User`) · 🔵 Menu catalog (`MenuCategory`, `MenuItem`) · 🩷 Cart & ordering (`Cart`, `CartItem`, `Order`, `OrderItem`) · 🟠 Reservations · 🟣 Payment · 🟢 Reviews
+
+## Key Relationships (from BRD Section 8)
 
 | Relationship | Cardinality | Notes |
 |---|---|---|
