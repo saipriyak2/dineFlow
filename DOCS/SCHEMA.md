@@ -1,6 +1,6 @@
 # Data Model / Schema — Restaurant Web Application (MVP)
 
-This diagram reflects the entities and relationships defined in the Business Requirements Document (Section 8 — Data Model Overview). It renders automatically on GitHub.
+This diagram reflects the entities and relationships defined in the Business Requirements Document.
 
 ```mermaid
 classDiagram
@@ -124,7 +124,7 @@ classDiagram
 
 **Color key:** 🟡 Identity (`User`) · 🔵 Menu catalog (`MenuCategory`, `MenuItem`) · 🩷 Cart & ordering (`Cart`, `CartItem`, `Order`, `OrderItem`) · 🟠 Reservations · 🟣 Payment · 🟢 Reviews
 
-## Key Relationships (from BRD Section 8)
+## Key Relationships
 
 | Relationship | Cardinality | Notes |
 |---|---|---|
