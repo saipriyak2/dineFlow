@@ -3,7 +3,7 @@ package com.example.restaurant.repository;
 import com.example.restaurant.entity.MenuItem;
 import org.springframework.data.jpa.domain.Specification;
 
-//import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Root;
+
 
 public final class MenuItemSpecifications {
 
